@@ -705,21 +705,79 @@ body{background:var(--bg);color:var(--text);font-family:var(--mono);font-size:14
             </div>
           </div>
 
-      <!-- SPX 0DTE PANEL -->
-      <div class="chart-card" id="spx-panel" style="overflow:hidden;transition:max-height .3s ease;max-height:110px" onmouseenter="this.style.maxHeight='420px'" onmouseleave="this.style.maxHeight='110px'">
-        <div class="chart-label" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
-          <span style="color:#ef4444">🔥 SPX 0DTE Flow</span>
-          <div style="display:flex;align-items:center;gap:4px">
-            <span id="spx-cp-ratio" style="font-size:9px;padding:1px 5px;border-radius:3px;background:rgba(255,255,255,.05);color:var(--muted)">C/P —</span>
-            <span id="spx-panel-live" style="font-size:8px;padding:1px 5px;border-radius:3px;background:rgba(239,68,68,.08);color:var(--red);border:0.5px solid rgba(239,68,68,.25)">NO DATA</span>
+ <!-- SPX 0DTE PANEL -->
+        <div id="spx-panel" style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:8px;">
+
+          <!-- Header -->
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px;border-bottom:1px solid var(--border);background:var(--bg3);">
+            <span style="font-size:11px;font-weight:700;letter-spacing:1px;color:#ef4444;">🔥 SPX 0DTE Flow</span>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span id="spx-cp-ratio" style="font-size:9px;padding:1px 6px;border-radius:3px;background:rgba(255,255,255,.05);color:var(--muted)">C/P —</span>
+              <span id="spx-panel-live" style="font-size:9px;padding:1px 6px;border-radius:3px;background:rgba(239,68,68,.08);color:var(--red);border:0.5px solid rgba(239,68,68,.3)">LIVE</span>
+            </div>
+          </div>
+
+          <!-- Stats row -->
+          <div id="spx-stats-row" style="display:none;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--border);">
+            <div style="padding:5px 10px;text-align:center;border-right:1px solid var(--border);">
+              <div style="font-size:9px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;">Alerts</div>
+              <div id="spx-s-total" style="font-size:15px;font-weight:700;color:var(--amber);">0</div>
+            </div>
+            <div style="padding:5px 10px;text-align:center;border-right:1px solid var(--border);">
+              <div style="font-size:9px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;">Calls</div>
+              <div id="spx-s-calls" style="font-size:15px;font-weight:700;color:var(--green);">0</div>
+            </div>
+            <div style="padding:5px 10px;text-align:center;border-right:1px solid var(--border);">
+              <div style="font-size:9px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;">Puts</div>
+              <div id="spx-s-puts" style="font-size:15px;font-weight:700;color:var(--red);">0</div>
+            </div>
+            <div style="padding:5px 10px;text-align:center;">
+              <div style="font-size:9px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;">Total Flow</div>
+              <div id="spx-s-flow" style="font-size:15px;font-weight:700;color:var(--amber);">$0</div>
+            </div>
+          </div>
+
+          <!-- Mini collapsed view -->
+          <div id="spx-mini" style="font-size:10px;color:var(--muted);line-height:1.5;padding:6px 12px;">Waiting for scanner...</div>
+
+          <!-- Expanded view -->
+          <div id="spx-expanded" style="display:none;">
+
+            <!-- Hot Strikes -->
+            <div style="padding:6px 10px;border-bottom:1px solid var(--border);">
+              <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;">🔥 HOT STRIKES — MOST ACTIVE RIGHT NOW</div>
+              <div id="spx-cards-wrap" style="display:grid;grid-template-columns:repeat(5,1fr);gap:5px;"></div>
+            </div>
+
+            <!-- Heatmap -->
+            <div style="padding:6px 10px;border-bottom:1px solid var(--border);">
+              <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;">🌡 STRIKE HEATMAP — FLOW INTENSITY</div>
+              <div id="spx-heatmap" style="display:flex;flex-wrap:wrap;gap:3px;"></div>
+            </div>
+
+            <!-- Alerts Table -->
+            <div style="overflow-x:auto;">
+              <table style="width:100%;border-collapse:collapse;font-size:11px;">
+                <thead>
+                  <tr style="border-bottom:1px solid var(--border);">
+                    <th style="padding:5px 10px;text-align:left;font-size:9px;font-weight:600;color:var(--muted);letter-spacing:1px;text-transform:uppercase;white-space:nowrap;">TIME</th>
+                    <th style="padding:5px 10px;text-align:left;font-size:9px;font-weight:600;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">TYPE</th>
+                    <th style="padding:5px 10px;text-align:left;font-size:9px;font-weight:600;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">STRIKE</th>
+                    <th style="padding:5px 10px;text-align:left;font-size:9px;font-weight:600;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">PREMIUM</th>
+                    <th style="padding:5px 10px;text-align:left;font-size:9px;font-weight:600;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">PRINTS</th>
+                    <th style="padding:5px 10px;text-align:left;font-size:9px;font-weight:600;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">AVG $</th>
+                    <th style="padding:5px 10px;text-align:left;font-size:9px;font-weight:600;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">SCORE</th>
+                  </tr>
+                </thead>
+                <tbody id="spx-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div style="font-size:8px;color:var(--muted);padding:4px 12px;text-align:right;opacity:.6;border-top:1px solid var(--border);">
+            resets 8am ET &middot; <span id="spx-toggle-btn" style="cursor:pointer;color:var(--amber);text-decoration:underline;" onclick="spxToggleExpand()">expand ▾</span>
           </div>
         </div>
-        <div id="spx-mini" style="font-size:10px;color:var(--muted);line-height:1.5">Waiting for scanner...</div>
-        <div id="spx-expanded" style="margin-top:8px;border-top:0.5px solid var(--border);padding-top:8px;display:flex;flex-direction:column;gap:4px">
-          <div id="spx-cards-wrap"></div>
-          <div style="font-size:8px;color:var(--muted);margin-top:4px;text-align:right;opacity:.6">resets 8am ET · hover to expand</div>
-        </div>
-      </div>
         </div>
 
         <div class="toolbar">
@@ -2625,75 +2683,187 @@ async function fetchSpxAlerts() {
   } catch(e) {}
 }
 
-function renderSpxPanel() {
-  const panel = document.getElementById("spx-panel");
-  const mini = document.getElementById("spx-mini");
-  const wrap = document.getElementById("spx-cards-wrap");
-  const liveEl = document.getElementById("spx-panel-live");
-  const cpEl = document.getElementById("spx-cp-ratio");
-  if (!panel || !mini || !wrap) return;
+let spxExpanded = false;
 
-  const alerts = spxAlertsData;
+    function spxToggleExpand() {
+      spxExpanded = !spxExpanded;
+      const exp = document.getElementById('spx-expanded');
+      const statsRow = document.getElementById('spx-stats-row');
+      const mini = document.getElementById('spx-mini');
+      const btn = document.getElementById('spx-toggle-btn');
+      if (exp) exp.style.display = spxExpanded ? 'block' : 'none';
+      if (statsRow) statsRow.style.display = spxExpanded ? 'grid' : 'none';
+      if (mini) mini.style.display = spxExpanded ? 'none' : 'block';
+      if (btn) btn.textContent = spxExpanded ? 'collapse ▴' : 'expand ▾';
+    }
 
-  if (!alerts || alerts.length === 0) {
-    mini.textContent = "No SPX data yet today";
-    mini.style.color = "var(--muted)";
-    return;
-  }
+    function spxFmt(p) {
+      return p >= 1e6 ? `$${(p/1e6).toFixed(2)}M` : `$${(p/1000).toFixed(1)}K`;
+    }
 
-  // Stats
-  const totalFlow = alerts.reduce((s, a) => s + (a.total_premium || 0), 0);
-  const calls = alerts.filter(a => a.cp === "C").length;
-  const puts  = alerts.filter(a => a.cp === "P").length;
-  const ratio = puts > 0 ? (calls / puts).toFixed(1) : calls > 0 ? "∞" : "—";
-  const lastAlert = alerts[0];
+    function renderSpxPanel() {
+      const mini    = document.getElementById('spx-mini');
+      const wrap    = document.getElementById('spx-cards-wrap');
+      const heatmap = document.getElementById('spx-heatmap');
+      const tbody   = document.getElementById('spx-tbody');
+      const liveEl  = document.getElementById('spx-panel-live');
+      const cpEl    = document.getElementById('spx-cp-ratio');
+      if (!mini || !wrap) return;
 
-  // Live badge
-  if (liveEl) {
-    const lastTs = lastAlert.timestamp || 0;
-    const age = (Date.now() / 1000) - lastTs;
-    const isLive = age < 600; // within 10 min = live
-    liveEl.textContent = isLive ? "LIVE" : "CLOSED";
-    liveEl.style.color = isLive ? "var(--green)" : "var(--amber)";
-    liveEl.style.background = isLive ? "rgba(34,197,94,.08)" : "rgba(245,158,11,.08)";
-    liveEl.style.borderColor = isLive ? "rgba(34,197,94,.3)" : "rgba(245,158,11,.3)";
-  }
-  if (cpEl) cpEl.textContent = `C/P ${ratio}`;
+      const alerts = spxAlertsData;
+      if (!alerts || alerts.length === 0) {
+        mini.textContent = 'No SPX data yet today';
+        mini.style.color = 'var(--muted)';
+        return;
+      }
 
-  // Mini (collapsed) view — show top hot strike + total flow
-  const sm = {};
-  alerts.forEach(a => {
-    const k = a.strike + "_" + a.cp;
-    if (!sm[k]) sm[k] = { strike: a.strike, cp: a.cp, flow: 0, alerts: 0, maxPrints: 0 };
-    sm[k].flow += (a.total_premium || 0);
-    sm[k].alerts++;
-    sm[k].maxPrints = Math.max(sm[k].maxPrints, a.count || 0);
-  });
-  const sorted = Object.values(sm).sort((a, b) => b.flow - a.flow);
-  const top = sorted[0];
-  const topLabel = top ? `#1 $${Number(top.strike).toLocaleString()} ${top.cp === "C" ? "CALL" : "PUT"} · ${spxFmt(top.flow)}` : "—";
-  mini.innerHTML = `
-    <span style="color:var(--text);font-weight:600">${topLabel}</span>
-    <span style="color:var(--muted);margin-left:8px">| Total ${spxFmt(totalFlow)} · ${alerts.length} alerts</span>
-  `;
+      // Stats
+      const totalFlow = alerts.reduce((s, a) => s + (a.total_premium || 0), 0);
+      const calls     = alerts.filter(a => a.cp === 'C').length;
+      const puts      = alerts.filter(a => a.cp === 'P').length;
+      const ratio     = puts > 0 ? (calls / puts).toFixed(1) : calls > 0 ? '∞' : '–';
+      const lastAlert = alerts[0];
 
-  // Expanded view — top 5 hot strikes
-  const top5 = sorted.slice(0, 5);
-  wrap.innerHTML = top5.map((s, i) => {
-    const isCall = s.cp === "C";
-    const clr = isCall ? "var(--green)" : "var(--red)";
-    const bg  = isCall ? "rgba(34,197,94,.06)" : "rgba(239,68,68,.06)";
-    const bdr = isCall ? "rgba(34,197,94,.3)" : "rgba(239,68,68,.3)";
-    return `<div style="display:flex;align-items:center;justify-content:space-between;padding:5px 8px;background:${bg};border-radius:4px;border:0.5px solid ${bdr}">
-      <span style="font-size:9px;color:var(--muted)">#${i+1}</span>
-      <span style="font-size:11px;font-weight:700;color:${clr}">$${Number(s.strike).toLocaleString()}</span>
-      <span style="font-size:9px;padding:1px 4px;border-radius:3px;background:${bg};color:${clr};border:0.5px solid ${bdr}">${isCall ? "CALL" : "PUT"}</span>
-      <span style="font-size:11px;font-weight:700;color:${clr}">${spxFmt(s.flow)}</span>
-      <span style="font-size:9px;color:var(--muted)">${s.alerts} alerts</span>
-      <span style="font-size:9px;color:var(--amber)">${s.maxPrints}x max</span>
-    </div>`;
-  }).join("");
-}
+      // Update stats bar elements
+      const sTotal = document.getElementById('spx-s-total');
+      const sCalls = document.getElementById('spx-s-calls');
+      const sPuts  = document.getElementById('spx-s-puts');
+      const sFlow  = document.getElementById('spx-s-flow');
+      if (sTotal) sTotal.textContent = alerts.length;
+      if (sCalls) sCalls.textContent = calls;
+      if (sPuts)  sPuts.textContent  = puts;
+      if (sFlow)  sFlow.textContent  = spxFmt(totalFlow);
+
+      // Live badge
+      if (liveEl) {
+        const lastTs = lastAlert.timestamp || 0;
+        const age    = (Date.now() / 1000) - lastTs;
+        const isLive = age < 600;
+        liveEl.textContent        = isLive ? 'LIVE' : 'CLOSED';
+        liveEl.style.color        = isLive ? 'var(--green)' : 'var(--amber)';
+        liveEl.style.background   = isLive ? 'rgba(34,197,94,.08)' : 'rgba(245,158,11,.08)';
+        liveEl.style.borderColor  = isLive ? 'rgba(34,197,94,.3)' : 'rgba(245,158,11,.3)';
+      }
+      if (cpEl) cpEl.textContent = `C/P ${ratio}`;
+
+      // Mini view — top hot strike
+      const sm = {};
+      alerts.forEach(a => {
+        const k = `${a.strike}_${a.cp}`;
+        if (!sm[k]) sm[k] = { strike: a.strike, cp: a.cp, flow: 0, alerts: 0, maxPrints: 0 };
+        sm[k].flow += (a.total_premium || 0);
+        sm[k].alerts++;
+        sm[k].maxPrints = Math.max(sm[k].maxPrints, a.count || 0);
+      });
+      const sorted = Object.values(sm).sort((a, b) => b.flow - a.flow);
+      const top    = sorted[0];
+      const topLabel = top ? `#1 $${ Number(top.strike).toLocaleString()} ${top.cp === 'C' ? 'CALL' : 'PUT'} · ${spxFmt(top.flow)}` : '–';
+      mini.innerHTML = `
+        ${topLabel}
+        | Total ${spxFmt(totalFlow)} · ${alerts.length} alerts
+      `;
+
+      // Hot Strike Cards (top 5)
+      const top5 = sorted.slice(0, 5);
+      wrap.innerHTML = top5.map((s, i) => {
+        const isCall = s.cp === 'C';
+        const clr    = isCall ? 'var(--green)' : 'var(--red)';
+        const bg     = isCall ? 'rgba(34,197,94,.06)' : 'rgba(239,68,68,.06)';
+        const bdr    = isCall ? 'rgba(34,197,94,.35)' : 'rgba(239,68,68,.35)';
+        const lbl    = isCall ? 'CALL' : 'PUT';
+        return `
+
+          
+#${i+1} HOT STRIKE
+
+          
+$${ Number(s.strike).toLocaleString()}
+${lbl}
+
+          
+${spxFmt(s.flow)}
+
+          
+
+            ${s.alerts} alerts
+            max ${s.maxPrints}x hits
+          
+
+        
+`;
+      }).join('');
+
+      // Heatmap
+      if (heatmap) {
+        const hm = {};
+        alerts.forEach(a => {
+          const k = a.strike;
+          if (!hm[k]) hm[k] = { calls: 0, puts: 0, callFlow: 0, putFlow: 0 };
+          if (a.cp === 'C') { hm[k].calls++; hm[k].callFlow += (a.total_premium || 0); }
+          else              { hm[k].puts++;  hm[k].putFlow  += (a.total_premium || 0); }
+        });
+        const maxFlow = Math.max(...Object.values(hm).map(s => s.callFlow + s.putFlow), 1);
+        const hmSorted = Object.entries(hm).sort((a, b) => Number(b[0]) - Number(a[0]));
+        heatmap.innerHTML = hmSorted.map(([strike, d]) => {
+          const tot       = d.callFlow + d.putFlow;
+          const intensity = Math.ceil((tot / maxFlow) * 5);
+          let bg, clr, bdr, lbl;
+          if (d.calls > 0 && d.puts > 0) {
+            bg = 'rgba(245,158,11,.12)'; clr = 'var(--amber)'; bdr = 'rgba(245,158,11,.4)';
+            lbl = `${d.calls}C ${d.puts}P`;
+          } else if (d.calls > 0) {
+            const i = intensity;
+            const bgs = ['rgba(34,197,94,.06)','rgba(34,197,94,.12)','rgba(34,197,94,.2)','rgba(34,197,94,.35)','#22c55e'];
+            const clrs= ['#4ade80','#22c55e','#22c55e','#dcfce7','#052e16'];
+            bg = bgs[i-1]; clr = clrs[i-1]; bdr = `rgba(34,197,94,${0.2*i})`;
+            lbl = `${d.calls}C`;
+          } else {
+            const i = intensity;
+            const bgs = ['rgba(239,68,68,.06)','rgba(239,68,68,.12)','rgba(239,68,68,.2)','rgba(239,68,68,.35)','#ef4444'];
+            const clrs= ['#f87171','#ef4444','#ef4444','#fee2e2','#fff'];
+            bg = bgs[i-1]; clr = clrs[i-1]; bdr = `rgba(239,68,68,${0.2*i})`;
+            lbl = `${d.puts}P`;
+          }
+          return `
+
+            
+$${ Number(strike).toLocaleString()}
+
+            
+${spxFmt(tot)} · ${lbl}
+
+          
+`;
+        }).join('');
+      }
+
+      // Alerts table (latest 20)
+      if (tbody) {
+        tbody.innerHTML = alerts.slice(0, 20).map(a => {
+          const isCall = a.cp === 'C';
+          const clr    = isCall ? 'var(--green)' : 'var(--red)';
+          const bg     = isCall ? 'rgba(34,197,94,.04)' : 'rgba(239,68,68,.04)';
+          const lbl    = isCall ? 'CALL' : 'PUT';
+          const badgeBg = isCall ? 'rgba(34,197,94,.15)' : 'rgba(239,68,68,.15)';
+          const pc = (a.count || 0) >= 20 ? 'rgba(245,158,11,.15)' : (a.count || 0) >= 8 ? 'rgba(34,197,94,.12)' : 'rgba(255,255,255,.05)';
+          const pcClr = (a.count || 0) >= 20 ? 'var(--amber)' : (a.count || 0) >= 8 ? 'var(--green)' : 'var(--muted)';
+          const stars = '★'.repeat(a.score || 1) + '☆'.repeat(5 - (a.score || 1));
+          return `
+            ${a.time || ''}
+            
+              ${lbl}
+            
+            $${ Number(a.strike).toLocaleString()}
+            ${spxFmt(a.total_premium || 0)}
+            
+              ${a.count || 0}x hits
+            
+            $${(a.avg_price || 0).toFixed(2)}
+            ${stars}
+          `;
+        }).join('');
+      }
+    }
 
 // Start polling once user is logged in
 function startSpxPolling() {
